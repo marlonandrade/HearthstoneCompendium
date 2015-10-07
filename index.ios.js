@@ -12,21 +12,35 @@ var {
   View,
 } = React;
 
+var CardList = require('./js/CardList');
+
 var HeathstoneCompendium = React.createClass({
+  getInitialState: function() {
+    return {
+      cards: []
+    };
+  },
+
+  componentDidMount: function() {
+    fetch('https://raw.githubusercontent.com/pdyck/hearthstone-db/master/cards/all-cards.json')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          cards: data.cards
+        });
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+  },
+
   render: function() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+      <CardList
+        style={styles.container}
+        cards={this.state.cards}
+      />
     );
   }
 });
